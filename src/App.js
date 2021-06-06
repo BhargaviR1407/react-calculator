@@ -1,5 +1,5 @@
 import "./App.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, React } from "react";
 import NumberFormat from "react-number-format";
 
 function App() {
@@ -8,9 +8,9 @@ function App() {
   const [input, setInput] = useState("0");
   const [operator, setOperator] = useState(null);
   const [total, setTotal] = useState(false);
+  const [show, setShow] = useState(false);
 
   const inputNum = (e) => {
-    if (curState.includes(".") && e.target.innerText === ".") return;
 
     if (total) {
       setPreState("");
@@ -21,6 +21,7 @@ function App() {
       : setCurState(e.target.innerText);
     setTotal(false);
   };
+  
 
   useEffect(() => {
     setInput(curState);
@@ -50,15 +51,23 @@ function App() {
       case "/":
         cal = String(parseFloat(preState) / parseFloat(curState));
         break;
-
       case "+":
         cal = String(parseFloat(preState) + parseFloat(curState));
         break;
-      case "X":
+      case "*":
         cal = String(parseFloat(preState) * parseFloat(curState));
         break;
       case "-":
         cal = String(parseFloat(preState) - parseFloat(curState));
+        break;
+      case "Sign Change":
+        cal = String(parseFloat(preState) * (-1));
+        break;
+      case "Square":
+        cal = String(parseFloat(preState) * parseFloat(preState));
+        break;
+      case "Square Root":
+        cal = String(Math.sqrt(parseFloat(preState)));
         break;
       default:
         return;
@@ -66,6 +75,13 @@ function App() {
     setInput("");
     setPreState(cal);
     setCurState("");
+  };
+
+
+  const reset = () => {
+    setPreState("");
+    setCurState("");
+    setInput("0");
   };
 
   const minusPlus = () => {
@@ -76,17 +92,18 @@ function App() {
     }
   };
 
-  const percent = () => {
-    preState
-      ? setCurState(String((parseFloat(curState) / 100) * preState))
-      : setCurState(String(parseFloat(curState) / 100));
-  };
+  // const sqrt = (preState) => {
+    
+  //   for (var i = 0; i*i <= preState; i ++)
+  //   {
+  //     if( i*i === preState) {
+  //       return i;
+  //     }
+  //   }
+  //   return preState;
+  // }
 
-  const reset = () => {
-    setPreState("");
-    setCurState("");
-    setInput("0");
-  };
+
   return (
     <div className='container'>
       <div className='wrapper'>
@@ -105,29 +122,18 @@ function App() {
             />
           )}
         </div>
-        <div className='btn light-gray' onClick={reset}>
-          AC
-        </div>
-        <div className='btn light-gray' onClick={percent}>
-          %
-        </div>
-        <div className='btn light-gray' onClick={minusPlus}>
-          +/-
-        </div>
-        <div className='btn orange' onClick={operatorType}>
-          /
+       
+        <div className='btn' onClick={inputNum}>
+          1
         </div>
         <div className='btn' onClick={inputNum}>
-          7
+          2
         </div>
         <div className='btn' onClick={inputNum}>
-          8
+          3
         </div>
-        <div className='btn' onClick={inputNum}>
-          9
-        </div>
-        <div className='btn orange' onClick={operatorType}>
-          X
+        <div className='btn' onClick={operatorType}>
+          +
         </div>
         <div className='btn' onClick={inputNum}>
           4
@@ -138,31 +144,57 @@ function App() {
         <div className='btn' onClick={inputNum}>
           6
         </div>
-        <div className='btn orange' onClick={operatorType}>
-          +
-        </div>
-        <div className='btn' onClick={inputNum}>
-          1
-        </div>
-        <div className='btn' onClick={inputNum}>
-          2
-        </div>
-        <div className='btn' onClick={inputNum}>
-          3
-        </div>
-        <div className='btn orange' onClick={operatorType}>
+        <div className='btn' onClick={operatorType}>
           -
         </div>
-        <div className='btn zero' onClick={inputNum}>
-          0
+        <div className='btn' onClick={inputNum}>
+          7
         </div>
         <div className='btn' onClick={inputNum}>
-          .
+          8
+        </div>
+        <div className='btn' onClick={inputNum}>
+          9
+        </div>
+        <div className='btn' onClick={operatorType}>
+          *
+        </div>
+         <div className='btn' onClick={reset}>
+          AC
+        </div>
+        <div className='btn' onClick={inputNum}>
+          0
         </div>
         <div className='btn' onClick={equals}>
           =
         </div>
-      </div>
+        <div className='btn' onClick={operatorType}>
+          /
+        </div>
+        <div className='btn1' onClick={minusPlus}>
+        -/+
+        </div>
+        <div className='btn1' onClick={() => setShow(!show)}>
+         Scientific Mode
+        </div>
+        {
+          show ?
+        <div className='wrapping'>
+        <div className='btn2' onClick={operatorType}>
+          Sign Change
+        </div>
+        <div className='btn2' onClick={operatorType}>
+          Square
+        </div>
+        <div className='btn2' onClick={operatorType}>
+          Square Root
+        </div>
+        </div>
+        :
+        null
+        }
+        
+    </div>
     </div>
   );
 }
